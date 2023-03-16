@@ -1,0 +1,43 @@
+{
+  "name": "@emmveqz/currency-reports-daemons",
+  "version": "1.0.0",
+  "description": "Currency Reports (daemons)",
+  "main": "src/index.js",
+  "scripts": {
+    "clean-js": "rm -f ./src/*.js",
+    "gen-vars": "npx tsc --build ./gen-vars-tsconfig.json   &&   node ./src/config/gen-vars.js",
+    "postinstall": "npm run gen-vars",
+    "compile": "npx tsc --build ./tsconfig.json"
+  },
+  "author": "Emmanuel Velazquez",
+  "license": "ISC",
+  "homepage": "https://github.com/emmveqz/currency-reports-daemons#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/emmveqz/currency-reports-daemons.git"
+  },
+  "bugs": {
+    "url": "https://github.com/emmveqz/currency-reports-daemons/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://npm.pkg.github.com"
+  },
+  "bundledDependencies": [
+  ],
+  "dependencies": {
+    "@emmveqz/currency-reports-core": "^1.0.0",
+    "@emmveqz/currency-reports-core-enums": "^1.0.0",
+    "@emmveqz/currency-reports-core-interfaces": "^1.0.0",
+    "@emmveqz/currency-reports-core-vars": "^1.0.0",
+    "@emmveqz/currency-reports-tools": "^1.0.0",
+    "@types/node": "^12.7.3",
+    "@types/nodemailer": "^6.4.0",
+    "imap": "^0.8.19",
+    "nodemailer": "^6.4.5"
+  },
+  "devDependencies": {
+    "tslint": "^5.19.0",
+    "typescript": "^3.6.4"
+  }
+}
