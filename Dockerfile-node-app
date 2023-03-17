@@ -11,6 +11,7 @@ WORKDIR /home/currency-reports
 
 # COPY SOURCE FILES
 
+COPY ./.env           ./
 COPY ./.npmrc         ./
 COPY ./*.json         ./
 COPY ./src             /home/currency-reports/src
@@ -18,4 +19,6 @@ COPY ./src             /home/currency-reports/src
 # SETTING UP INITIAL CONFIG
 
 RUN echo ${GITHUB_AUTH_TOKEN} >> ./.npmrc
+# So npm doesn't throw a warning/error on postinstall
+RUN npm set unsafe-perm true
 RUN npm ci

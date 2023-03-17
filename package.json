@@ -11,6 +11,9 @@
     "start": "node ./dist/currency-rate-fetcher.js",
     "compile": "npx tsc --build ./tsconfig.json"
   },
+  "config": {
+    "unsafe-perm": true
+  },
   "author": "Emmanuel Velazquez",
   "license": "ISC",
   "homepage": "https://github.com/emmveqz/currency-reports-daemons#readme",
