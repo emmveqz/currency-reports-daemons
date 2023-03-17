@@ -1,0 +1,49 @@
+#!/bin/sh
+
+THIS_DIR=$(dirname $0)
+
+# load configuration vars
+. $THIS_DIR/../config/vars
+
+SELECTED_DATABASE=$1
+DOCKER_OPTION=$2
+DB_ARCH_SQL_FILE=$THIS_DIR/../sql/${SELECTED_DATABASE}_db_arch.sql
+
+###############
+
+if [ "$SELECTED_DATABASE" = "currency_reports" ]; then
+	DB_HOST=$MYVAR_CORE_DB_HOST
+	DB_SCHEMA=$MYVAR_CORE_DB_DEFAULTSCHEMA
+	DB_USER=$MYVAR_CORE_DB_USER
+	DB_PASS=$MYVAR_CORE_DB_PASS
+	DB_ROOT_PASS=$MYVAR_CORE_DB_ROOTPASS
+else
+	exit 1
+fi
+
+###############
+
+# we set database's password based on /config/vars
+sed -i "s/CREATE DATABASE IF NOT EXISTS _DBSCHEMA/CREATE DATABASE IF NOT EXISTS ${DB_SCHEMA}/g" $DB_ARCH_SQL_FILE
+sed -i "s/PRIVILEGES ON _DBSCHEMA/PRIVILEGES ON ${DB_SCHEMA}/g" $DB_ARCH_SQL_FILE
+sed -i "s/USE _DBSCHEMA/USE ${DB_SCHEMA}/g" $DB_ARCH_SQL_FILE
+sed -i "s/'_DBHOST' IDENTIFIED/'${DB_HOST}' IDENTIFIED/g" $DB_ARCH_SQL_FILE
+sed -i "s/TO '_DBUSER'/TO '${DB_USER}'/g" $DB_ARCH_SQL_FILE
+sed -i "s/IDENTIFIED BY '_DBPASS'/IDENTIFIED BY '${DB_PASS}'/g" $DB_ARCH_SQL_FILE
+
+if [ "$DOCKER_OPTION" = "for-docker" ]; then
+	# directory  /docker-entrypoint-initdb.d  taken from mysql docker image documentation.
+	cp  $DB_ARCH_SQL_FILE  /docker-entrypoint-initdb.d/${SELECTED_DATABASE}_db_arch.sql
+else
+# creating/importing the database
+mysql -p${DB_ROOT_PASS} < $DB_ARCH_SQL_FILE
+fi
+
+# reverse the db_arch.sql file back to how it was
+sed -i "s/CREATE DATABASE IF NOT EXISTS ${DB_SCHEMA}/CREATE DATABASE IF NOT EXISTS _DBSCHEMA/g" $DB_ARCH_SQL_FILE
+sed -i "s/PRIVILEGES ON ${DB_SCHEMA}/PRIVILEGES ON _DBSCHEMA/g" $DB_ARCH_SQL_FILE
+sed -i "s/USE ${DB_SCHEMA}/USE _DBSCHEMA/g" $DB_ARCH_SQL_FILE
+sed -i "s/'${DB_HOST}' IDENTIFIED/'_DBHOST' IDENTIFIED/g" $DB_ARCH_SQL_FILE
+sed -i "s/TO '${DB_USER}'/TO '_DBUSER'/g" $DB_ARCH_SQL_FILE
+sed -i "s/IDENTIFIED BY '${DB_PASS}'/IDENTIFIED BY '_DBPASS'/g" $DB_ARCH_SQL_FILE
+

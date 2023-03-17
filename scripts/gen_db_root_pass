@@ -1,0 +1,8 @@
+#!/bin/sh
+
+THIS_DIR=$(dirname $0)
+
+# load configuration vars
+. $THIS_DIR/../config/vars
+
+echo ${MYVAR_CORE_DB_ROOTPASS} > $THIS_DIR/../config/db_root_pass

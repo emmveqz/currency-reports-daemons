@@ -1,0 +1,48 @@
+version: "3"
+
+services:
+  mysql_db:
+    container_name: mysql-db
+    build:
+      context: .
+      dockerfile: Dockerfile-mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: ./config/db_root_pass
+      TZ: UTC
+    healthcheck:
+      test: mysql --version
+      interval: 2s
+      timeout: 3s
+      retries: 4
+    ports:
+      - "${MYVAR_CORE_DB_PORT}:${MYVAR_CORE_DB_PORT}"
+    network_mode: "host"
+    working_dir: /home/currency-reports
+    volumes:
+      - ./db-data:/var/lib/mysql
+
+  node_app:
+    container_name: node-app
+    build:
+      args:
+        GITHUB_AUTH_TOKEN: ${GITHUB_AUTH_TOKEN}
+      context: .
+      dockerfile: Dockerfile-node-app
+    command:
+      - /bin/sh
+      - -c
+      - |
+        npm run start
+    depends_on:
+      mysql_db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      TZ: UTC
+    network_mode: host
+    volumes:
+      - ./src:/home/currency-reports/src
+      - type: bind
+        source: ./.env
+        target: /home/currency-reports/.env
+    working_dir: /home/currency-reports

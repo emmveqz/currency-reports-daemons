@@ -1,0 +1,21 @@
+
+FROM mysql:5.7.36
+
+# WORKING DIRECTORY
+
+WORKDIR /home/currency-reports
+
+# COPY SOURCE FILES
+
+COPY ./config                             ./config
+COPY ./.env                               ./config/vars
+COPY ./scripts/gen_db_root_pass           ./scripts/gen_db_root_pass
+COPY ./scripts/init_db                    ./scripts/init_db
+COPY ./sql/currency_reports_db_arch.sql   ./sql/currency_reports_db_arch.sql
+
+COPY ./config/mysql                        /etc/mysql/conf.d
+
+# SETTING UP INITIAL CONFIG
+
+RUN sh ./scripts/gen_db_root_pass
+RUN sh ./scripts/init_db currency_reports for-docker

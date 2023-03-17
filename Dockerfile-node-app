@@ -1,0 +1,21 @@
+
+FROM node:12.18.2-alpine3.12
+
+# PASSED ARGUMENTS
+
+ARG GITHUB_AUTH_TOKEN
+
+# WORKING DIRECTORY
+
+WORKDIR /home/currency-reports
+
+# COPY SOURCE FILES
+
+COPY ./.npmrc         ./
+COPY ./*.json         ./
+COPY ./src             /home/currency-reports/src
+
+# SETTING UP INITIAL CONFIG
+
+RUN echo ${GITHUB_AUTH_TOKEN} >> ./.npmrc
+RUN npm ci

@@ -2,11 +2,13 @@
   "name": "@emmveqz/currency-reports-daemons",
   "version": "1.0.0",
   "description": "Currency Reports (daemons)",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "clean-js": "rm -f ./src/*.js",
+    "clean-js": "rm -f ./src/*.js   &&   rm -f ./src/config/*.js",
     "gen-vars": "npx tsc --build ./gen-vars-tsconfig.json   &&   node ./src/config/gen-vars.js",
     "postinstall": "npm run gen-vars",
+    "prestart": "npm run gen-vars   &&   npm run compile",
+    "start": "node ./dist/currency-rate-fetcher.js",
     "compile": "npx tsc --build ./tsconfig.json"
   },
   "author": "Emmanuel Velazquez",
