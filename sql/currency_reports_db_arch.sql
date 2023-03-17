@@ -87,26 +87,3 @@ SELECT
 	`CreationDate` AS `Date`
 FROM `AlertSuscription`
 WHERE `TimesToRepeat` OR `TimesToRemind`;
-
-
--- ###########################################################
-
-
-CREATE VIEW `ActiveAlerts`
-AS
-SELECT
-	`a`.`Id` AS `Id`,
-	`c`.`Symbol` AS `Symbol`,
-	`a`.`CurrentRate` AS `Rate`,
-	IF(`a`.`Type` = 2,'down','up') AS `Type`,
-	`a`.`TimesToRepeat` AS `Repeat`,
-	`a`.`Factor` AS `Factor`,
-	`a`.`TimesToRemind` AS `Remind`,
-	`a`.`LastAlertDate` AS `LastAlert`,
-	`a`.`CreationDate` AS `Date`
-FROM `AlertSuscription` `a` JOIN `Currency` `c` ON `c`.`Id` = `a`.`Currency`
-WHERE `a`.`TimesToRepeat` OR `a`.`TimesToRemind`
-ORDER BY `c`.`Symbol`,`a`.`Id`
-DESC;
-
-
