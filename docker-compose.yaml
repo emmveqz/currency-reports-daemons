@@ -16,7 +16,7 @@ services:
       retries: 4
     ports:
       - "${MYVAR_CORE_DB_PORT}:${MYVAR_CORE_DB_PORT}"
-    network_mode: "host"
+    network_mode: host
     working_dir: /home/currency-reports
     volumes:
       - ./db-data:/var/lib/mysql
@@ -34,15 +34,12 @@ services:
       - |
         npm run start
     depends_on:
-      mysql_db:
-        condition: service_healthy
+      - mysql_db
     environment:
       NODE_ENV: production
       TZ: UTC
     network_mode: host
     volumes:
       - ./src:/home/currency-reports/src
-      - type: bind
-        source: ./.env
-        target: /home/currency-reports/.env
+      - ./.env:/home/currency-reports/.env
     working_dir: /home/currency-reports
