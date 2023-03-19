@@ -14,7 +14,8 @@ The daemons services for the [Currency Reports](https://github.com/emmveqz/curre
 
  - Have `docker` and `docker-compose` installed  
    (preferably docker-compose >= 2 otherwise you might get errors with the .yaml)
- - Create an access token from your github account with `read:packages` permissions.
+ - Create an access token from your github account with `read:packages` permissions.  
+   (You can do that [here](https://github.com/settings/tokens))
 
 
 ### Instructions
